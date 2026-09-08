@@ -20,7 +20,7 @@ jobs:
       - name: Checkout wawoo-cms core
         uses: actions/checkout@v4
         with:
-          repository: wawoo-cms/wawoo-cms
+          repository: parkwoo/wawoo-cms
           path: core
           ref: main
 
