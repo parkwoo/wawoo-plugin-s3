@@ -1,0 +1,29 @@
+{
+    "name": "s3",
+    "type": "plugin",
+    "version": "1.0.0",
+    "namespace": "Wawoo\\Plugin\\S3",
+    "entry": "Plugin",
+    "requires": {
+        "core": ">=1.0.0"
+    },
+    "hooks": {
+        "post.load": "MediaRewrite",
+        "page.load": "MediaRewrite"
+    },
+    "settings": true,
+    "config": {
+        "enabled": false,
+        "endpoint": "https://s3.amazonaws.com",
+        "region": "us-east-1",
+        "bucket": "",
+        "access_key": "",
+        "secret_key": "",
+        "public_base": "",
+        "prefix": "media",
+        "path_style": true,
+        "force_path": false,
+        "allow_http": false,
+        "rate_per_second": 0
+    }
+}
