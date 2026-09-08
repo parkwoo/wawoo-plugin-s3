@@ -45,3 +45,31 @@ Requires core outbound rate limiter availability (`Wawoo\Core\RateLimit`, core >
 ## Release
 
 Manifests require `core >=1.0.0`; this repo is tagged `v1.0.0`; bump manifest + tag together on releases.
+
+## Versioning, update & rollback
+
+- **Compatible core**: wawoo-cms `>= 1.0.0`.
+- **Pin a deployment**: record core + this plugin tags (e.g. both v1.0.0).
+
+      git -C /path/to/wawoo-plugin-s3 checkout v1.0.0
+      php bin/wawoo plugin:link /path/to/wawoo-plugin-s3
+
+  Docker: use `--copy` (symlinks dangle in images):
+
+      php bin/wawoo plugin:link /path/to/wawoo-plugin-s3 --copy
+
+- **Configuration & persistent data**: **Credentials live in
+  `cache/settings/s3.json`** (written by the admin Settings page: endpoint,
+  region, bucket, access_key, secret_key, public_base, prefix, allow_http,
+  rate_per_second). Treat that file as secret and back it up with the cache
+  volume. No env vars. Requires openssl + TLS transports. SSRF/DNS-rebinding
+  are enforced (public HTTPS only unless `allow_http`; connections pinned to
+  the validated IP).
+- **Before updating**: back up cache state volume + test:
+
+      docker run --rm -v <cache-volume>:/data -v $PWD:/backup alpine tar czf /backup/cache.tgz -C /data .
+      cd /path/to/wawoo-cms
+      php bin/wawoo plugin:link /path/to/wawoo-plugin-s3
+      phpunit tests/Plugin/S3*Test.php
+
+- **Rollback**: checkout previous tag, re-link (--copy for Docker), restore cache volume backup, restart.
