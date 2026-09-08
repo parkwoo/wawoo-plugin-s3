@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3']
+    name: PHP ${{ matrix.php }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: plugin
+
+      - name: Checkout wawoo-cms core
+        uses: actions/checkout@v4
+        with:
+          repository: wawoo-cms/wawoo-cms
+          path: core
+          ref: main
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, openssl
+
+      - name: Install PHPUnit 9.6
+        run: |
+          curl -fsSL -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-9.6.phar
+          chmod +x /usr/local/bin/phpunit
+
+      - name: Link plugin into core
+        run: php bin/wawoo plugin:link "$GITHUB_WORKSPACE/plugin" --copy
+        working-directory: core
+
+      - name: Lint
+        run: |
+          err=0
+          while IFS= read -r f; do php -l "$f" >/dev/null || err=1; done < <(find ../plugin -name '*.php' ! -path './vendor/*')
+          exit $err
+        working-directory: core
+
+      - name: Run plugin tests
+        run: phpunit --colors=never tests/Plugin/S3*Test.php
+        working-directory: core

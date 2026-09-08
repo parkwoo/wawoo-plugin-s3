@@ -33,3 +33,15 @@ Runtime notes:
   DNS-rebinding-resistant: the host is validated once in the constructor,
   verified public addresses are pinned, and DNS is never re-consulted at
   connect time.
+
+## CI
+
+GitHub Actions runs on PHP 8.2 & 8.3 — it clones wawoo-cms core, links this plugin via `php bin/wawoo plugin:link --copy`, and runs `phpunit tests/Plugin/S3*Test.php`.
+
+## Dependencies
+
+Requires core outbound rate limiter availability (`Wawoo\Core\RateLimit`, core >=1.0.0), openssl + TLS transports. Optional `rate_per_second` config. No cross-plugin dependency.
+
+## Release
+
+Manifests require `core >=1.0.0`; this repo is tagged `v1.0.0`; bump manifest + tag together on releases.
