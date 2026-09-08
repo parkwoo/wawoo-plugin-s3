@@ -4,9 +4,17 @@ Mirrors content media to S3-compatible object storage via a minimal AWS Signatur
 
 ## Install
 
+Get the plugin:
+
+```bash
+git clone https://github.com/parkwoo/wawoo-plugin-s3
+```
+
+Then link it from a wawoo-cms checkout:
+
 ```
 cd /path/to/wawoo-cms
-php bin/wawoo plugin:link /home/git/wawoo-plugin-s3
+php bin/wawoo plugin:link /path/to/wawoo-plugin-s3
 ```
 
 Enable via config.local.php ENABLED_PLUGINS or admin Plugins page.
@@ -15,7 +23,7 @@ Enable via config.local.php ENABLED_PLUGINS or admin Plugins page.
 
 ```
 cd /path/to/wawoo-cms
-php bin/wawoo plugin:link /home/git/wawoo-plugin-s3
+php bin/wawoo plugin:link /path/to/wawoo-plugin-s3
 phpunit tests/Plugin/S3*Test.php
 ```
 
